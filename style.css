@@ -1,0 +1,582 @@
+:root {
+  --sky-top: #05060f;
+  --sky-bottom: #141a3a;
+  --stem: #2f8f5b;
+  --stem-dark: #174d34;
+  --pa: #ff4d8d;
+  --pb: #ffb199;
+  --glow: #ffe9a8;
+  --hand: "Caveat", "Segoe Script", "Bradley Hand", cursive;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+[hidden] { display: none !important; }
+
+html, body { height: 100%; }
+
+body {
+  overflow: hidden;
+  background: linear-gradient(to bottom, var(--sky-top), var(--sky-bottom));
+  font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  color: #fff;
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* Antes de abrir el regalo todo queda en pausa (menos la portada) */
+.not-loaded *,
+.not-loaded *::before,
+.not-loaded *::after {
+  animation-play-state: paused !important;
+}
+.not-loaded .intro,
+.not-loaded .intro * {
+  animation-play-state: running !important;
+}
+
+/* ---------- Noche y estrellas ---------- */
+.night {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+}
+.night .star {
+  position: absolute;
+  width: 2px;
+  height: 2px;
+  border-radius: 50%;
+  background: #fff;
+  opacity: .8;
+  animation: twinkle var(--t, 3s) ease-in-out infinite;
+  animation-delay: var(--d, 0s);
+}
+@keyframes twinkle {
+  0%, 100% { opacity: .15; transform: scale(.8); }
+  50%      { opacity: 1;   transform: scale(1.4); }
+}
+
+/* Aurora secreta (aparece al completar el jardín) */
+.aurora {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 4s ease;
+  background:
+    radial-gradient(60% 40% at 25% 25%, rgba(70, 255, 190, .35), transparent 70%),
+    radial-gradient(55% 40% at 75% 20%, rgba(150, 90, 255, .38), transparent 70%),
+    radial-gradient(50% 35% at 50% 40%, rgba(255, 90, 170, .22), transparent 70%);
+}
+body.magic .aurora {
+  opacity: 1;
+  animation: aurora 14s ease-in-out infinite alternate;
+}
+@keyframes aurora {
+  from { transform: translateX(-3%) scale(1); }
+  to   { transform: translateX(3%) scale(1.08); }
+}
+
+/* ---------- Luna ---------- */
+.moon {
+  position: fixed;
+  z-index: 6;
+  top: 6vmin;
+  right: 8vmin;
+  width: clamp(52px, 11vmin, 130px);
+  aspect-ratio: 1;
+  border: 0;
+  border-radius: 50%;
+  cursor: pointer;
+  background: radial-gradient(circle at 35% 35%, #fffdf2, #ebe5ca 60%, #cfc8a6);
+  box-shadow: 0 0 4vmin 1vmin rgba(255, 250, 220, .35), 0 0 14vmin 4vmin rgba(255, 250, 220, .15);
+  transition: transform .4s ease, box-shadow .4s ease;
+}
+.moon::before,
+.moon::after {
+  content: "";
+  position: absolute;
+  border-radius: 50%;
+  background: rgba(150, 140, 100, .22);
+}
+.moon::before { width: 22%; height: 22%; left: 52%; top: 22%; }
+.moon::after  { width: 15%; height: 15%; left: 24%; top: 58%; }
+.moon:hover { transform: scale(1.07); box-shadow: 0 0 5vmin 1.5vmin rgba(255, 250, 220, .5), 0 0 18vmin 6vmin rgba(255, 250, 220, .2); }
+.moon:focus-visible { outline: 3px solid #fff; outline-offset: 6px; }
+.moon.is-wish { animation: moonWish 1.4s ease; }
+@keyframes moonWish {
+  0%, 100% { transform: scale(1); }
+  40%      { transform: scale(1.15); }
+}
+
+/* ---------- Suelo ---------- */
+.ground {
+  position: fixed;
+  z-index: 3;
+  left: 0; right: 0; bottom: 0;
+  height: 9vmin;
+  background: linear-gradient(to top, #04060d, #0b1226);
+  pointer-events: none;
+}
+
+/* ---------- Flores ---------- */
+.flowers {
+  position: fixed;
+  z-index: 2;
+  inset: 0;
+  pointer-events: none;
+}
+
+.flower {
+  position: absolute;
+  bottom: 8vmin;
+  left: var(--x);
+  width: 0;
+  height: var(--h);
+}
+.flower--1 { --x: 50%; --h: 52vmin; }
+.flower--2 { --x: 27%; --h: 36vmin; --s: .75; --pa: #8f7bff; --pb: #ffd0f5; }
+.flower--3 { --x: 73%; --h: 42vmin; --s: .85; --pa: #ffb42e; --pb: #fff0a3; }
+
+.flower__line {
+  position: absolute;
+  bottom: 0;
+  left: -.45vmin;
+  width: .9vmin;
+  min-width: 5px;
+  height: 100%;
+  border-radius: 1vmin;
+  background: linear-gradient(to top, var(--stem-dark), var(--stem));
+  transform-origin: bottom center;
+  animation: grow 2.2s cubic-bezier(.3, .7, .2, 1) both;
+  pointer-events: auto;
+  cursor: pointer;
+}
+.flower--2 .flower__line { animation-delay: .5s; }
+.flower--3 .flower__line { animation-delay: 1s; }
+
+@keyframes grow {
+  from { transform: scaleY(0); }
+  to   { transform: scaleY(1); }
+}
+
+/* Hojas del tallo */
+.flower__line::before,
+.flower__line::after {
+  content: "";
+  position: absolute;
+  width: 5vmin;
+  height: 2.4vmin;
+  background: var(--stem);
+  border-radius: 100% 0 100% 0;
+  bottom: 22%;
+}
+.flower__line::before { left: .9vmin; transform: rotate(-25deg); }
+.flower__line::after {
+  right: .9vmin;
+  bottom: 40%;
+  border-radius: 0 100% 0 100%;
+  transform: rotate(25deg);
+}
+
+/* Cabeza de la flor */
+.flower__leafs {
+  position: absolute;
+  left: 0;
+  bottom: var(--h);
+  width: 0;
+  height: 0;
+  transform: scale(var(--s, 1));
+}
+.flower__leafs.wiggle { animation: wiggle .9s ease; }
+@keyframes wiggle {
+  0%, 100% { transform: scale(var(--s, 1)) rotate(0deg); }
+  25%      { transform: scale(calc(var(--s, 1) * 1.15)) rotate(-7deg); }
+  60%      { transform: scale(calc(var(--s, 1) * 1.1)) rotate(6deg); }
+}
+
+.flower__leaf {
+  position: absolute;
+  bottom: 0;
+  left: -4vmin;
+  width: 8vmin;
+  height: 15vmin;
+  border-radius: 50% 50% 45% 45% / 70% 70% 30% 30%;
+  background: linear-gradient(to top, var(--pa), var(--pb));
+  transform-origin: 50% 100%;
+  transform: rotate(var(--r)) scale(1);
+  opacity: .92;
+  mix-blend-mode: screen;
+  animation: bloom 2.4s cubic-bezier(.2, .8, .2, 1) both;
+  animation-delay: var(--delay, 2s);
+  pointer-events: auto;
+  cursor: pointer;
+}
+.flower__leaf--1 { --r: -62deg; }
+.flower__leaf--2 { --r: -22deg; }
+.flower__leaf--3 { --r: 22deg; }
+.flower__leaf--4 { --r: 62deg; }
+
+.flower--1 .flower__leaf { --delay: 2.1s; }
+.flower--2 .flower__leaf { --delay: 2.6s; }
+.flower--3 .flower__leaf { --delay: 3.1s; }
+
+@keyframes bloom {
+  from { transform: rotate(0deg) scale(0); opacity: 0; }
+  to   { transform: rotate(var(--r)) scale(1); opacity: .92; }
+}
+
+.flower__white-circle {
+  position: absolute;
+  left: -2.2vmin;
+  bottom: -2.2vmin;
+  width: 4.4vmin;
+  height: 4.4vmin;
+  border-radius: 50%;
+  background: #fff7dc;
+  box-shadow: 0 0 3vmin 1vmin var(--glow), 0 0 8vmin 2vmin rgba(255, 200, 120, .35);
+  animation: pulse 3s ease-in-out infinite, pop 1.2s ease-out both;
+  animation-delay: 0s, 2s;
+  pointer-events: auto;
+  cursor: pointer;
+}
+@keyframes pulse {
+  0%, 100% { filter: brightness(1); }
+  50%      { filter: brightness(1.25); }
+}
+@keyframes pop {
+  from { transform: scale(0); }
+  to   { transform: scale(1); }
+}
+
+/* Flores plantadas por la persona: crecen más rápido */
+.flower--new .flower__line { animation-duration: 1.4s; animation-delay: 0s; }
+.flower--new .flower__leaf { --delay: 1.1s; animation-duration: 1.8s; }
+.flower--new .flower__white-circle { animation-delay: 0s, 1.1s; }
+
+/* Luciérnagas */
+.flower__light {
+  position: absolute;
+  left: var(--lx);
+  bottom: 0;
+  width: .9vmin;
+  height: .9vmin;
+  min-width: 4px;
+  min-height: 4px;
+  border-radius: 50%;
+  background: var(--glow);
+  box-shadow: 0 0 1.4vmin .5vmin rgba(255, 230, 160, .8);
+  opacity: 0;
+  animation: float var(--ld) ease-in infinite;
+  animation-delay: var(--Lely);
+  pointer-events: none;
+}
+@keyframes float {
+  0%   { transform: translate(0, 0) scale(.4); opacity: 0; }
+  15%  { opacity: 1; }
+  100% { transform: translate(var(--drift), -32vmin) scale(1); opacity: 0; }
+}
+
+/* Pasto */
+.grass {
+  position: fixed;
+  z-index: 3;
+  bottom: 7vmin;
+  left: 0; right: 0;
+  height: 12vmin;
+  pointer-events: none;
+}
+.grass span {
+  position: absolute;
+  bottom: 0;
+  left: var(--gx);
+  width: .7vmin;
+  min-width: 3px;
+  height: var(--gh);
+  background: linear-gradient(to top, #0e2a1d, #1f6a43);
+  border-radius: 1vmin 1vmin 0 0;
+  transform-origin: bottom center;
+  transform: rotate(var(--gr));
+  animation: sway 4s ease-in-out infinite alternate;
+  animation-delay: var(--gd);
+}
+@keyframes sway {
+  from { transform: rotate(calc(var(--gr) - 4deg)); }
+  to   { transform: rotate(calc(var(--gr) + 4deg)); }
+}
+
+/* ---------- Mensajes ---------- */
+.message {
+  position: fixed;
+  z-index: 5;
+  top: 18vh;
+  left: 50%;
+  transform: translateX(-50%);
+  width: min(90vw, 780px);
+  min-height: 1.3em;
+  text-align: center;
+  font-family: var(--hand);
+  font-weight: 700;
+  font-size: clamp(1.9rem, 5.5vw, 3.4rem);
+  line-height: 1.15;
+  color: #fff;
+  text-shadow: 0 0 18px rgba(255, 220, 160, .55), 0 2px 6px rgba(0, 0, 0, .6);
+  opacity: 0;
+  transition: opacity .7s ease;
+  pointer-events: none;
+}
+.message.is-on { opacity: 1; }
+
+.hint {
+  position: fixed;
+  z-index: 5;
+  top: 1.1rem;
+  left: 50%;
+  transform: translateX(-50%);
+  width: min(70vw, 460px);
+  text-align: center;
+  font-size: .9rem;
+  line-height: 1.35;
+  color: rgba(255, 255, 255, .62);
+  opacity: 0;
+  transition: opacity 1.2s ease;
+  pointer-events: none;
+}
+.hint.is-on { opacity: 1; }
+
+.bubble {
+  position: fixed;
+  z-index: 20;
+  max-width: min(260px, 80vw);
+  padding: .55rem .95rem;
+  border-radius: 16px;
+  background: rgba(255, 255, 255, .96);
+  color: #2a1633;
+  font-family: var(--hand);
+  font-weight: 700;
+  font-size: 1.45rem;
+  line-height: 1.15;
+  text-align: center;
+  box-shadow: 0 0 22px rgba(255, 220, 160, .55);
+  pointer-events: none;
+  animation: bubbleUp 4.2s ease both;
+}
+@keyframes bubbleUp {
+  0%   { opacity: 0; transform: translate(-50%, -85%) scale(.8); }
+  12%  { opacity: 1; transform: translate(-50%, -100%) scale(1); }
+  85%  { opacity: 1; transform: translate(-50%, -125%) scale(1); }
+  100% { opacity: 0; transform: translate(-50%, -140%) scale(1); }
+}
+
+/* Chispas del cursor, pétalos y estrellas fugaces */
+.spark {
+  position: fixed;
+  z-index: 30;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--glow);
+  box-shadow: 0 0 10px 3px rgba(255, 230, 160, .8);
+  pointer-events: none;
+  transform: translate(-50%, -50%);
+}
+.petal {
+  position: fixed;
+  z-index: 25;
+  width: 10px;
+  height: 14px;
+  border-radius: 50% 50% 50% 0;
+  pointer-events: none;
+}
+.shoot {
+  position: fixed;
+  z-index: 4;
+  width: 14vmin;
+  height: 2px;
+  border-radius: 2px;
+  background: linear-gradient(to right, #fff, rgba(255, 255, 255, 0));
+  box-shadow: 0 0 8px 2px rgba(255, 255, 255, .5);
+  transform-origin: left center;
+  pointer-events: none;
+}
+
+/* ---------- Interfaz ---------- */
+.ui { z-index: 10; }
+
+.counter,
+.btn-gift,
+.btn-mute {
+  position: fixed;
+  padding: .5rem .95rem;
+  border: 1px solid rgba(255, 255, 255, .22);
+  border-radius: 999px;
+  background: rgba(255, 255, 255, .09);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+  color: #fff;
+  font: inherit;
+  font-size: .95rem;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 1s ease, background .25s ease, transform .25s ease;
+}
+body.is-ready .counter,
+body.is-ready .btn-gift,
+body.is-ready .btn-mute { opacity: 1; visibility: visible; }
+
+.counter { top: 1rem; left: 1rem; }
+.counter.bump { animation: bump .5s ease; }
+@keyframes bump {
+  50% { transform: scale(1.25); background: rgba(255, 120, 170, .35); }
+}
+
+.btn-gift, .btn-mute { bottom: .9rem; cursor: pointer; }
+.btn-gift { left: .9rem; }
+.btn-mute { right: .9rem; }
+.btn-gift:hover, .btn-mute:hover { background: rgba(255, 255, 255, .18); }
+.btn-gift:focus-visible, .btn-mute:focus-visible,
+.panel__go:focus-visible, .finale__close:focus-visible, .intro__btn:focus-visible {
+  outline: 3px solid #fff;
+  outline-offset: 3px;
+}
+
+/* Panel para crear el regalo */
+.panel {
+  position: fixed;
+  left: .9rem;
+  bottom: 4rem;
+  width: min(92vw, 340px);
+  padding: 1rem 1.1rem 1.1rem;
+  border: 1px solid rgba(255, 255, 255, .2);
+  border-radius: 16px;
+  background: rgba(10, 14, 34, .94);
+  box-shadow: 0 10px 40px rgba(0, 0, 0, .5);
+}
+.panel h2 { font-size: 1.05rem; margin-bottom: .6rem; font-weight: 600; }
+.panel label { display: block; margin: .6rem 0 .25rem; font-size: .82rem; color: rgba(255, 255, 255, .75); }
+.panel input,
+.panel textarea {
+  width: 100%;
+  padding: .5rem .65rem;
+  border: 1px solid rgba(255, 255, 255, .2);
+  border-radius: 8px;
+  background: rgba(255, 255, 255, .07);
+  color: #fff;
+  font: inherit;
+  font-size: .95rem;
+  resize: vertical;
+}
+.panel input:focus, .panel textarea:focus { outline: 2px solid #ff8fb8; outline-offset: 1px; }
+.panel__go {
+  width: 100%;
+  margin-top: .9rem;
+  padding: .6rem;
+  border: 0;
+  border-radius: 10px;
+  background: linear-gradient(135deg, #ff4d8d, #ff9a6a);
+  color: #fff;
+  font: inherit;
+  font-weight: 600;
+  cursor: pointer;
+}
+.panel__out { margin-top: .6rem; font-size: .8rem !important; }
+.panel__status { margin-top: .5rem; font-size: .82rem; line-height: 1.35; color: #b9ffd9; }
+
+/* ---------- Final secreto ---------- */
+.finale {
+  position: fixed;
+  z-index: 40;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  padding: 1.5rem;
+  background: rgba(5, 6, 15, .55);
+  backdrop-filter: blur(3px);
+  -webkit-backdrop-filter: blur(3px);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 1.4s ease;
+}
+.finale.is-on { opacity: 1; pointer-events: auto; }
+.finale__card { max-width: 640px; text-align: center; }
+.finale__title {
+  font-family: var(--hand);
+  font-size: clamp(2.4rem, 8vw, 4.6rem);
+  line-height: 1.05;
+  text-shadow: 0 0 26px rgba(255, 160, 210, .7);
+}
+.finale__text {
+  margin-top: 1rem;
+  font-family: var(--hand);
+  font-weight: 500;
+  font-size: clamp(1.6rem, 4.6vw, 2.5rem);
+  line-height: 1.2;
+  color: #ffeab8;
+}
+.finale__from {
+  margin-top: .8rem;
+  font-family: var(--hand);
+  font-size: 1.7rem;
+  color: #ffc4dc;
+}
+.finale__close {
+  margin-top: 1.6rem;
+  padding: .6rem 1.4rem;
+  border: 1px solid rgba(255, 255, 255, .35);
+  border-radius: 999px;
+  background: rgba(255, 255, 255, .1);
+  color: #fff;
+  font: inherit;
+  cursor: pointer;
+}
+
+/* ---------- Portada ---------- */
+.intro {
+  position: fixed;
+  z-index: 50;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  padding: 1.5rem;
+  background: radial-gradient(circle at 50% 40%, #1b2250, #05060f 70%);
+  transition: opacity 1.2s ease, visibility 1.2s;
+}
+.intro.is-gone { opacity: 0; visibility: hidden; pointer-events: none; }
+.intro__box { text-align: center; }
+.intro__sub {
+  font-family: var(--hand);
+  font-size: clamp(1.5rem, 5vw, 2.2rem);
+  color: #ffd9a8;
+}
+.intro__title {
+  margin: .2rem 0 1.6rem;
+  font-family: var(--hand);
+  font-size: clamp(3.4rem, 14vw, 7rem);
+  line-height: 1;
+  text-shadow: 0 0 30px rgba(255, 150, 200, .6);
+  overflow-wrap: anywhere;
+}
+.intro__btn {
+  padding: .8rem 2.4rem;
+  border: 0;
+  border-radius: 999px;
+  background: linear-gradient(135deg, #ff4d8d, #ff9a6a);
+  color: #fff;
+  font-family: var(--hand);
+  font-weight: 700;
+  font-size: 1.9rem;
+  cursor: pointer;
+  box-shadow: 0 0 0 0 rgba(255, 90, 150, .6);
+  animation: ring 2s ease-out infinite;
+}
+@keyframes ring {
+  to { box-shadow: 0 0 0 26px rgba(255, 90, 150, 0); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation-duration: .01s !important;
+    animation-delay: 0s !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: .01s !important;
+  }
+}

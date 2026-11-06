@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Un jardín para ti</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+
+<body class="not-loaded">
+  <div class="night"></div>
+  <div class="aurora"></div>
+
+  <button class="moon" type="button" aria-label="Luna: toca para pedir un deseo"></button>
+
+  <div class="flowers">
+
+    <div class="flower flower--1">
+      <div class="flower__line"></div>
+      <div class="flower__leafs flower__leafs--1">
+        <div class="flower__leaf flower__leaf--1"></div>
+        <div class="flower__leaf flower__leaf--2"></div>
+        <div class="flower__leaf flower__leaf--3"></div>
+        <div class="flower__leaf flower__leaf--4"></div>
+        <div class="flower__white-circle"></div>
+      </div>
+    </div>
+
+    <div class="flower flower--2">
+      <div class="flower__line"></div>
+      <div class="flower__leafs flower__leafs--2">
+        <div class="flower__leaf flower__leaf--1"></div>
+        <div class="flower__leaf flower__leaf--2"></div>
+        <div class="flower__leaf flower__leaf--3"></div>
+        <div class="flower__leaf flower__leaf--4"></div>
+        <div class="flower__white-circle"></div>
+      </div>
+    </div>
+
+    <div class="flower flower--3">
+      <div class="flower__line"></div>
+      <div class="flower__leafs flower__leafs--3">
+        <div class="flower__leaf flower__leaf--1"></div>
+        <div class="flower__leaf flower__leaf--2"></div>
+        <div class="flower__leaf flower__leaf--3"></div>
+        <div class="flower__leaf flower__leaf--4"></div>
+        <div class="flower__white-circle"></div>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="grass"></div>
+  <div class="ground"></div>
+
+  <p class="message" aria-live="polite"></p>
+  <p class="hint">Toca el cielo para plantar una flor. Toca una flor, o la luna.</p>
+
+  <div class="counter ui" aria-live="polite">🌸 <span id="count">3</span> / 7</div>
+
+  <button class="ui btn-gift" type="button" aria-expanded="false" aria-controls="panel">🎁 Crear el mío</button>
+  <button class="ui btn-mute" type="button" aria-label="Silenciar sonido">🔊</button>
+
+  <section class="panel ui" id="panel" hidden>
+    <h2>Regala este jardín</h2>
+    <label for="f-para">Para quién es</label>
+    <input id="f-para" type="text" maxlength="40" placeholder="Ana">
+    <label for="f-de">De parte de</label>
+    <input id="f-de" type="text" maxlength="40" placeholder="Tu nombre">
+    <label for="f-msg">Tu mensaje</label>
+    <textarea id="f-msg" maxlength="220" rows="3" placeholder="Escribe lo que quieres que lea cuando abra el regalo"></textarea>
+    <button class="panel__go" type="button">Copiar enlace</button>
+    <input class="panel__out" type="text" readonly aria-label="Enlace generado" hidden>
+    <p class="panel__status" role="status"></p>
+  </section>
+
+  <div class="finale" aria-hidden="true">
+    <div class="finale__card">
+      <h2 class="finale__title">Hiciste florecer todo un jardín</h2>
+      <p class="finale__text"></p>
+      <p class="finale__from"></p>
+      <button class="finale__close" type="button">Seguir jugando</button>
+    </div>
+  </div>
+
+  <div class="intro">
+    <div class="intro__box">
+      <p class="intro__sub">Alguien dejó algo para ti</p>
+      <h1 class="intro__title">Hola</h1>
+      <button class="intro__btn" type="button">Abrir</button>
+    </div>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
